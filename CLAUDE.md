@@ -76,8 +76,8 @@ Each scenario is self-contained with its own input and expected output.
 ## Documentation Maintenance
 
 **Always update SPECIFICATIONS.md** when making changes to the codebase:
-- Read `docs/SPECIFICATIONS.md` before starting work to understand the current state
-- Update `docs/SPECIFICATIONS.md` after implementing new features or modifying existing behavior
+- Read `SPECIFICATIONS.md` before starting work to understand the current state
+- Update `SPECIFICATIONS.md` after implementing new features or modifying existing behavior
 - Keep the specifications in sync with the actual implementation
 
 ## Testing Requirements
