@@ -1,0 +1,26 @@
+[
+  {
+    "id": "video1",
+    "title": "Building Web Apps with Rust",
+    "url": "https://www.youtube.com/watch?v=video1",
+    "published": "2024-01-20T15:00:00Z",
+    "channel_name": "Google for Developers",
+    "channel_id": "UC_x5XG1OV2P6uZZ5FSM9Ttw"
+  },
+  {
+    "id": "video2",
+    "title": "What's New in Chrome DevTools",
+    "url": "https://www.youtube.com/watch?v=video2",
+    "published": "2024-01-18T10:30:00Z",
+    "channel_name": "Google for Developers",
+    "channel_id": "UC_x5XG1OV2P6uZZ5FSM9Ttw"
+  },
+  {
+    "id": "video3",
+    "title": "Introduction to Firebase",
+    "url": "https://www.youtube.com/watch?v=video3",
+    "published": "2024-01-15T08:00:00Z",
+    "channel_name": "Google for Developers",
+    "channel_id": "UC_x5XG1OV2P6uZZ5FSM9Ttw"
+  }
+]

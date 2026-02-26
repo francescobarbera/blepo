@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns:media="http://search.yahoo.com/mrss/" xmlns="http://www.w3.org/2005/Atom">
+  <link rel="self" href="http://www.youtube.com/feeds/videos.xml?channel_id=UC_x5XG1OV2P6uZZ5FSM9Ttw"/>
+  <id>yt:channel:UC_x5XG1OV2P6uZZ5FSM9Ttw</id>
+  <yt:channelId>UC_x5XG1OV2P6uZZ5FSM9Ttw</yt:channelId>
+  <title>Google for Developers</title>
+  <link rel="alternate" href="https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw"/>
+  <author>
+    <name>Google for Developers</name>
+    <uri>https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw</uri>
+  </author>
+  <published>2007-08-23T00:34:43+00:00</published>
+  <entry>
+    <id>yt:video:video1</id>
+    <yt:videoId>video1</yt:videoId>
+    <yt:channelId>UC_x5XG1OV2P6uZZ5FSM9Ttw</yt:channelId>
+    <title>Building Web Apps with Rust</title>
+    <link rel="alternate" href="https://www.youtube.com/watch?v=video1"/>
+    <author>
+      <name>Google for Developers</name>
+      <uri>https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw</uri>
+    </author>
+    <published>2024-01-20T15:00:00+00:00</published>
+    <updated>2024-01-20T15:00:00+00:00</updated>
+    <media:group>
+      <media:title>Building Web Apps with Rust</media:title>
+      <media:content url="https://www.youtube.com/v/video1?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+      <media:thumbnail url="https://i1.ytimg.com/vi/video1/hqdefault.jpg" width="480" height="360"/>
+      <media:description>Learn how to build web applications using Rust.</media:description>
+      <media:community>
+        <media:starRating count="1234" average="4.89" min="1" max="5"/>
+        <media:statistics views="56789"/>
+      </media:community>
+    </media:group>
+  </entry>
+  <entry>
+    <id>yt:video:video2</id>
+    <yt:videoId>video2</yt:videoId>
+    <yt:channelId>UC_x5XG1OV2P6uZZ5FSM9Ttw</yt:channelId>
+    <title>What's New in Chrome DevTools</title>
+    <link rel="alternate" href="https://www.youtube.com/watch?v=video2"/>
+    <author>
+      <name>Google for Developers</name>
+      <uri>https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw</uri>
+    </author>
+    <published>2024-01-18T10:30:00+00:00</published>
+    <updated>2024-01-18T10:30:00+00:00</updated>
+    <media:group>
+      <media:title>What's New in Chrome DevTools</media:title>
+      <media:content url="https://www.youtube.com/v/video2?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+      <media:thumbnail url="https://i1.ytimg.com/vi/video2/hqdefault.jpg" width="480" height="360"/>
+      <media:description>Overview of the latest Chrome DevTools features.</media:description>
+      <media:community>
+        <media:starRating count="567" average="4.75" min="1" max="5"/>
+        <media:statistics views="12345"/>
+      </media:community>
+    </media:group>
+  </entry>
+  <entry>
+    <id>yt:video:video3</id>
+    <yt:videoId>video3</yt:videoId>
+    <yt:channelId>UC_x5XG1OV2P6uZZ5FSM9Ttw</yt:channelId>
+    <title>Introduction to Firebase</title>
+    <link rel="alternate" href="https://www.youtube.com/watch?v=video3"/>
+    <author>
+      <name>Google for Developers</name>
+      <uri>https://www.youtube.com/channel/UC_x5XG1OV2P6uZZ5FSM9Ttw</uri>
+    </author>
+    <published>2024-01-15T08:00:00+00:00</published>
+    <updated>2024-01-15T08:00:00+00:00</updated>
+    <media:group>
+      <media:title>Introduction to Firebase</media:title>
+      <media:content url="https://www.youtube.com/v/video3?version=3" type="application/x-shockwave-flash" width="640" height="390"/>
+      <media:thumbnail url="https://i1.ytimg.com/vi/video3/hqdefault.jpg" width="480" height="360"/>
+      <media:description>Get started with Firebase for your next project.</media:description>
+      <media:community>
+        <media:starRating count="890" average="4.92" min="1" max="5"/>
+        <media:statistics views="34567"/>
+      </media:community>
+    </media:group>
+  </entry>
+</feed>
