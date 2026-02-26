@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blepo — Watch YouTube without ads, distractions, or tracking</title>
+  <meta name="description" content="A minimal CLI tool for watching YouTube subscriptions through mpv. No ads, no tracking, no distractions.">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 4rem 1.5rem;
+    }
+
+    main {
+      max-width: 640px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .logo {
+      width: 120px;
+      height: auto;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      color: #8b949e;
+      margin-bottom: 0.5rem;
+    }
+
+    .etymology {
+      font-size: 0.85rem;
+      color: #484f58;
+      margin-bottom: 3rem;
+    }
+
+    .terminal {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      text-align: left;
+      margin-bottom: 3rem;
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      background: #21262d;
+      padding: 0.5rem 1rem;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #30363d;
+    }
+
+    .terminal-body {
+      padding: 1rem 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+
+    .terminal-body .prompt {
+      color: #29ABE2;
+    }
+
+    .terminal-body .dim {
+      color: #484f58;
+    }
+
+    .terminal-body .muted {
+      color: #8b949e;
+    }
+
+    .terminal-body .input {
+      color: #e6edf3;
+    }
+
+    .section {
+      margin-bottom: 2.5rem;
+      text-align: left;
+    }
+
+    .section h2 {
+      font-size: 1rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .install-block {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .install-block .label {
+      color: #484f58;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .install-block code {
+      color: #e6edf3;
+    }
+
+    .requires {
+      font-size: 0.8rem;
+      color: #484f58;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .requires span {
+      color: #8b949e;
+    }
+
+    a {
+      color: #29ABE2;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .github-link {
+      display: inline-block;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 0.6rem 1.5rem;
+      font-size: 0.9rem;
+      color: #e6edf3;
+      transition: border-color 0.2s;
+    }
+
+    .github-link:hover {
+      border-color: #29ABE2;
+      text-decoration: none;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 2.5rem 1rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .tagline {
+        font-size: 1rem;
+      }
+
+      .terminal-body {
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="logo.png" alt="Blepo logo" class="logo">
+    <h1>Blepo</h1>
+    <p class="tagline">Watch YouTube without ads, distractions, or tracking.</p>
+    <p class="etymology">From Ancient Greek <em>blepo</em> (&#946;&#955;&#941;&#960;&#969;) &mdash; "I see, I look."</p>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+        <div class="terminal-dot"></div>
+      </div>
+      <div class="terminal-body">
+        <div><span class="prompt">$</span> <span class="input">blepo</span></div>
+        <div class="dim">Fetching ThePrimeagen...</div>
+        <div class="dim">Fetching Fireship...</div>
+        <div class="dim">Fetching Jon Gjengset...</div>
+        <div class="muted">Fetched 12 videos from 3 channels</div>
+        <br>
+        <div>&nbsp; 1. [2026-02-25] ThePrimeagen &mdash; Rust vs Go: The Final Answer</div>
+        <div>&nbsp; 2. [2026-02-24] Fireship &mdash; 10 Niche Technologies in 100 Seconds</div>
+        <div>&nbsp; 3. [2026-02-23] Jon Gjengset &mdash; Implementing TCP in Rust (part 4)</div>
+        <div>&nbsp; 4. [2026-02-22] Fireship &mdash; The Database Tier List</div>
+        <br>
+        <div><span class="muted">Enter number to play, w&lt;number&gt; to mark watched, q to quit:</span> <span class="input">3</span></div>
+        <div>Playing: Implementing TCP in Rust (part 4) [Jon Gjengset]</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Install</h2>
+      <div class="install-block">
+        <div class="label"># from source</div>
+        <code>cargo install --git https://github.com/francescobarbera/blepo</code>
+      </div>
+      <p class="requires">Requires <span>mpv</span> and <span>yt-dlp</span> installed on your system.</p>
+    </div>
+
+    <div class="section">
+      <h2>Configure</h2>
+      <div class="install-block">
+        <div class="label"># config.toml (run blepo to see the path)</div>
+        <code>
+          [[channels]]<br>
+          name = "Fireship"<br>
+          id = "UCsBjURrPoezykLs9EqgamOA"
+        </code>
+      </div>
+    </div>
+
+    <a href="https://github.com/francescobarbera/blepo" class="github-link">View on GitHub</a>
+  </main>
+</body>
+</html>
