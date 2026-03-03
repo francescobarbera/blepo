@@ -104,8 +104,11 @@ pub fn filter_unwatched<'a>(videos: &'a [Video], watched: &HashSet<VideoId>) -> 
 }
 
 #[must_use]
-pub fn filter_by_window(videos: &[Video], after: DateTime<Utc>) -> Vec<&Video> {
-    videos.iter().filter(|v| v.published >= after).collect()
+pub fn filter_by_date_range(videos: &[Video], after: DateTime<Utc>, before: DateTime<Utc>) -> Vec<&Video> {
+    videos
+        .iter()
+        .filter(|v| v.published >= after && v.published <= before)
+        .collect()
 }
 
 pub fn sort_newest_first(videos: &mut [Video]) {
@@ -162,14 +165,15 @@ mod tests {
 
     #[test]
     fn filters_videos_outside_window() {
+        let now = Utc::now();
         let videos = vec![
             make_video("v1", "Recent", 1),
             make_video("v2", "Old", 10),
             make_video("v3", "Edge", 6),
         ];
-        let cutoff = Utc::now() - chrono::Duration::days(7);
+        let cutoff = now - chrono::Duration::days(7);
 
-        let within_window = filter_by_window(&videos, cutoff);
+        let within_window = filter_by_date_range(&videos, cutoff, now);
 
         assert_eq!(within_window.len(), 2);
         assert!(within_window.iter().any(|v| v.id.to_string() == "v1"));
@@ -192,8 +196,9 @@ mod tests {
     }
 
     #[test]
-    fn filter_by_window_with_exact_boundary() {
+    fn filter_by_date_range_with_exact_boundary() {
         let boundary = Utc.with_ymd_and_hms(2024, 1, 15, 0, 0, 0).unwrap();
+        let far_future = Utc.with_ymd_and_hms(2099, 1, 1, 0, 0, 0).unwrap();
         let videos = vec![
             Video {
                 id: VideoId::parse("v1").unwrap(),
@@ -221,10 +226,27 @@ mod tests {
             },
         ];
 
-        let result = filter_by_window(&videos, boundary);
+        let result = filter_by_date_range(&videos, boundary, far_future);
 
         assert_eq!(result.len(), 2);
         assert!(result.iter().any(|v| v.id.to_string() == "v2"));
+        assert!(result.iter().any(|v| v.id.to_string() == "v3"));
+    }
+
+    #[test]
+    fn excludes_scheduled_videos_with_future_published_date() {
+        let now = Utc::now();
+        let cutoff = now - chrono::Duration::days(7);
+        let videos = vec![
+            make_video("v1", "Published", 1),
+            make_video("v2", "Scheduled", -2),
+            make_video("v3", "Also Published", 3),
+        ];
+
+        let result = filter_by_date_range(&videos, cutoff, now);
+
+        assert_eq!(result.len(), 2);
+        assert!(result.iter().any(|v| v.id.to_string() == "v1"));
         assert!(result.iter().any(|v| v.id.to_string() == "v3"));
     }
 

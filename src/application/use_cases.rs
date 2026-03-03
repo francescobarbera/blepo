@@ -2,7 +2,7 @@ use chrono::{Duration, Utc};
 
 use crate::domain::channel::Channel;
 use crate::domain::video::{
-    filter_by_window, filter_unwatched, sort_newest_first, FetchWindowDays, Video,
+    filter_by_date_range, filter_unwatched, sort_newest_first, FetchWindowDays, Video,
 };
 
 use super::ports::{FeedFetcher, PlayError, ShortsChecker, StoreError, VideoPlayer, VideoStore};
@@ -43,7 +43,8 @@ pub fn fetch_videos(
     shorts_checker: &dyn ShortsChecker,
     fetch_window_days: FetchWindowDays,
 ) -> Result<Vec<Video>, AppError> {
-    let cutoff = Utc::now() - Duration::days(fetch_window_days.as_i64());
+    let now = Utc::now();
+    let cutoff = now - Duration::days(fetch_window_days.as_i64());
 
     eprintln!("Updating videos list...");
 
@@ -58,7 +59,11 @@ pub fn fetch_videos(
             let (channel, result) = handle.join().unwrap();
             match result {
                 Ok(fetched) => {
-                    videos.extend(filter_by_window(&fetched, cutoff).into_iter().cloned());
+                    videos.extend(
+                        filter_by_date_range(&fetched, cutoff, now)
+                            .into_iter()
+                            .cloned(),
+                    );
                 }
                 Err(e) => {
                     eprintln!("Warning: failed to fetch {}: {e}", channel.name);
@@ -307,6 +312,24 @@ mod tests {
         assert_eq!(result.len(), 2);
         assert_eq!(result[0].id.to_string(), "v1");
         assert_eq!(result[1].id.to_string(), "v2");
+    }
+
+    #[test]
+    fn fetch_videos_excludes_scheduled() {
+        let videos = vec![
+            make_video("v1", "Published", 1),
+            make_video("v2", "Scheduled Tomorrow", -1),
+            make_video("v3", "Scheduled Next Week", -7),
+        ];
+        let fetcher = MockFetcher { videos };
+        let store = MockStore::new();
+        let shorts = MockShortsChecker::none();
+
+        let result =
+            fetch_videos(&[test_channel()], &fetcher, &store, &shorts, seven_days()).unwrap();
+
+        assert_eq!(result.len(), 1);
+        assert_eq!(result[0].id.to_string(), "v1");
     }
 
     #[test]
