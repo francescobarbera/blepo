@@ -39,7 +39,7 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     loop {
-        print!("\nEnter number to play, w<number> to mark watched, q to quit: ");
+        print!("\nEnter number to play, w<number> to mark watched, wa to mark all watched, q to quit: ");
         io::stdout().flush()?;
 
         let mut input = String::new();
@@ -47,6 +47,11 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
         let input = input.trim();
 
         if input.is_empty() || input == "q" {
+            return Ok(());
+        }
+
+        if input == "wa" {
+            use_cases::mark_all_as_watched(&videos, &store)?;
             return Ok(());
         }
 

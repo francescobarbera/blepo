@@ -2,7 +2,7 @@ use chrono::{Duration, Utc};
 
 use crate::domain::channel::Channel;
 use crate::domain::video::{
-    filter_by_date_range, filter_unwatched, sort_newest_first, FetchWindowDays, Video,
+    filter_by_date_range, filter_unwatched, sort_newest_first, FetchWindowDays, Video, VideoId,
 };
 
 use super::ports::{FeedFetcher, PlayError, ShortsChecker, StoreError, VideoPlayer, VideoStore};
@@ -112,6 +112,13 @@ pub fn mark_and_play(
 
 pub fn mark_as_watched(video: &Video, store: &dyn VideoStore) -> Result<(), AppError> {
     store.mark_watched(&video.id)?;
+    Ok(())
+}
+
+pub fn mark_all_as_watched(videos: &[Video], store: &dyn VideoStore) -> Result<(), AppError> {
+    let ids: Vec<&VideoId> = videos.iter().map(|v| &v.id).collect();
+    store.mark_watched_batch(&ids)?;
+    println!("Marked {} videos as watched.", videos.len());
     Ok(())
 }
 
@@ -371,5 +378,33 @@ mod tests {
         let result = mark_and_play(&video, &store, &player);
 
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn mark_all_as_watched_marks_every_video() {
+        let videos = vec![
+            make_video("v1", "First", 1),
+            make_video("v2", "Second", 2),
+            make_video("v3", "Third", 3),
+        ];
+        let store = MockStore::new();
+
+        mark_all_as_watched(&videos, &store).unwrap();
+
+        let watched = store.load_watched().unwrap();
+        assert_eq!(watched.len(), 3);
+        assert!(watched.contains(&VideoId::parse("v1").unwrap()));
+        assert!(watched.contains(&VideoId::parse("v2").unwrap()));
+        assert!(watched.contains(&VideoId::parse("v3").unwrap()));
+    }
+
+    #[test]
+    fn mark_all_as_watched_with_empty_list() {
+        let store = MockStore::new();
+
+        mark_all_as_watched(&[], &store).unwrap();
+
+        let watched = store.load_watched().unwrap();
+        assert!(watched.is_empty());
     }
 }

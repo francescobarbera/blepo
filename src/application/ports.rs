@@ -61,6 +61,12 @@ pub trait FeedFetcher: Send + Sync {
 pub trait VideoStore {
     fn load_watched(&self) -> Result<HashSet<VideoId>, StoreError>;
     fn mark_watched(&self, video_id: &VideoId) -> Result<(), StoreError>;
+    fn mark_watched_batch(&self, video_ids: &[&VideoId]) -> Result<(), StoreError> {
+        for id in video_ids {
+            self.mark_watched(id)?;
+        }
+        Ok(())
+    }
 }
 
 pub trait VideoPlayer {

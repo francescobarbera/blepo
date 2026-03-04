@@ -43,6 +43,19 @@ impl VideoStore for JsonVideoStore {
         fs::write(&self.watched_path, json)
             .map_err(|e| StoreError::Write(format!("cannot write watched: {e}")))
     }
+
+    fn mark_watched_batch(&self, video_ids: &[&VideoId]) -> Result<(), StoreError> {
+        let mut watched = self.load_watched()?;
+        for id in video_ids {
+            watched.insert((*id).clone());
+        }
+
+        let json = serde_json::to_string_pretty(&watched)
+            .map_err(|e| StoreError::Write(format!("cannot serialize watched: {e}")))?;
+
+        fs::write(&self.watched_path, json)
+            .map_err(|e| StoreError::Write(format!("cannot write watched: {e}")))
+    }
 }
 
 #[cfg(test)]
@@ -86,5 +99,39 @@ mod tests {
         let watched = store.load_watched().unwrap();
 
         assert_eq!(watched.len(), 1);
+    }
+
+    #[test]
+    fn mark_watched_batch_marks_all_at_once() {
+        let dir = TempDir::new().unwrap();
+        let store = JsonVideoStore::new(&dir.path().to_path_buf()).unwrap();
+
+        let v1 = VideoId::parse("v1").unwrap();
+        let v2 = VideoId::parse("v2").unwrap();
+        let v3 = VideoId::parse("v3").unwrap();
+
+        store.mark_watched_batch(&[&v1, &v2, &v3]).unwrap();
+
+        let watched = store.load_watched().unwrap();
+        assert_eq!(watched.len(), 3);
+        assert!(watched.contains(&v1));
+        assert!(watched.contains(&v2));
+        assert!(watched.contains(&v3));
+    }
+
+    #[test]
+    fn mark_watched_batch_preserves_existing() {
+        let dir = TempDir::new().unwrap();
+        let store = JsonVideoStore::new(&dir.path().to_path_buf()).unwrap();
+
+        store.mark_watched(&VideoId::parse("v1").unwrap()).unwrap();
+
+        let v2 = VideoId::parse("v2").unwrap();
+        store.mark_watched_batch(&[&v2]).unwrap();
+
+        let watched = store.load_watched().unwrap();
+        assert_eq!(watched.len(), 2);
+        assert!(watched.contains(&VideoId::parse("v1").unwrap()));
+        assert!(watched.contains(&v2));
     }
 }

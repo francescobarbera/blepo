@@ -104,7 +104,11 @@ pub fn filter_unwatched<'a>(videos: &'a [Video], watched: &HashSet<VideoId>) -> 
 }
 
 #[must_use]
-pub fn filter_by_date_range(videos: &[Video], after: DateTime<Utc>, before: DateTime<Utc>) -> Vec<&Video> {
+pub fn filter_by_date_range(
+    videos: &[Video],
+    after: DateTime<Utc>,
+    before: DateTime<Utc>,
+) -> Vec<&Video> {
     videos
         .iter()
         .filter(|v| v.published >= after && v.published <= before)
