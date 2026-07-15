@@ -116,7 +116,7 @@ pub fn filter_by_date_range(
 }
 
 pub fn sort_newest_first(videos: &mut [Video]) {
-    videos.sort_by(|a, b| b.published.cmp(&a.published));
+    videos.sort_by_key(|video| std::cmp::Reverse(video.published));
 }
 
 #[cfg(test)]
