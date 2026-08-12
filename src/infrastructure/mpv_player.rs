@@ -15,6 +15,7 @@ impl MpvPlayer {
 impl VideoPlayer for MpvPlayer {
     fn play(&self, url: &str) -> Result<(), PlayError> {
         Command::new("mpv")
+            .arg("--")
             .arg(url)
             .stdin(Stdio::null())
             .stdout(Stdio::null())
