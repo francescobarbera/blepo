@@ -106,6 +106,8 @@ Clean Architecture with four layers:
 - **Infrastructure** (`src/infrastructure/`): `RssFeedFetcher`, `YtDlpFetcher`, `FallbackFetcher`, `JsonVideoStore`, `MpvPlayer`, `HttpShortsChecker`, config parsing
 - **Presentation** (`src/presentation/`): Single interactive command with stdin prompt
 
+The library crate owns these layers. The binary entry point imports the public presentation API from the library rather than declaring a second copy of the module tree.
+
 ### Parse, Don't Validate
 
 All data is parsed into validated domain types at system boundaries:

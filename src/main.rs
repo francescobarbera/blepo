@@ -1,9 +1,4 @@
-mod application;
-mod domain;
-mod infrastructure;
-mod presentation;
-
-use presentation::cli::run;
+use blepo::presentation::cli::run;
 
 fn main() {
     if let Err(e) = run() {
