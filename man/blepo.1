@@ -1,0 +1,159 @@
+.\" Manual page for blepo
+.TH BLEPO 1 "August 2026" "blepo 0.1.0" "User Commands"
+.SH NAME
+blepo \- watch YouTube channels without ads, distractions, or tracking
+.SH SYNOPSIS
+.B blepo
+.br
+.B blepo add
+.I CHANNEL
+.br
+.B blepo
+.RB [ \-h | \-\-help ]
+.SH DESCRIPTION
+.B blepo
+fetches recent videos from configured YouTube channels, removes Shorts and
+videos already marked as watched, and presents the remaining videos as a
+numbered list.
+Selected videos are played through
+.BR mpv (1).
+Blepo stores watched video IDs locally and requires no YouTube account or API
+key.
+.PP
+When YouTube RSS is unavailable, Blepo uses
+.BR yt-dlp (1)
+as a fallback.
+.SH COMMANDS
+.TP
+.B blepo
+Fetch recent unwatched videos and open the interactive selection prompt.
+.TP
+.BI "blepo add " CHANNEL
+Resolve a YouTube channel and add it to the configuration file. Existing
+settings, comments, and channels are preserved. Adding the same canonical
+channel more than once is rejected.
+.TP
+.BR "blepo \-h" ", " "blepo \-\-help" ", " "blepo help"
+Display command usage and examples.
+.SH ADDING A CHANNEL
+The
+.B add
+command accepts any of the following forms:
+.TP
+.B @Fireship
+A YouTube handle.
+.TP
+.B https://www.youtube.com/@Fireship
+A YouTube channel URL. Legacy
+.B /channel/
+and
+.B /user/
+channel URLs are also accepted.
+.TP
+.B UCsBjURrPoezykLs9EqgamOA
+A canonical YouTube channel ID beginning with
+.BR UC .
+.PP
+For example:
+.PP
+.nf
+blepo add @Fireship
+.fi
+.PP
+Blepo asks
+.BR yt-dlp (1)
+for the canonical channel name and ID, validates them, and writes an entry like
+this:
+.PP
+.nf
+[[channels]]
+name = "Fireship"
+id = "UCsBjURrPoezykLs9EqgamOA"
+.fi
+.PP
+This removes the need to find or copy the internal
+.B UC
+identifier manually.
+.SH INTERACTIVE COMMANDS
+After
+.B blepo
+displays the numbered video list, the prompt accepts:
+.TP
+.I number
+Play the selected video and mark it as watched.
+.TP
+.BI w number
+Mark one video as watched without playing it. For example,
+.B w3
+marks video 3.
+.TP
+.B wa
+Mark every currently displayed video as watched. This affects only the videos
+fetched within the configured time window, not the complete history of each
+channel.
+.TP
+.B q
+Quit without selecting another video. Pressing Enter on an empty prompt also
+quits.
+.SH CONFIGURATION
+The configuration uses TOML. The optional
+.B fetch_window_days
+setting controls how far Blepo looks back and defaults to 7 days.
+.PP
+.nf
+fetch_window_days = 7
+
+[[channels]]
+name = "3Blue1Brown"
+id = "UCYO_jab_esuFRV4b17AJtAw"
+.fi
+.PP
+Manual editing remains supported, although
+.B blepo add
+is the recommended way to add channels.
+.SH FILES
+.TP
+.I ~/.config/blepo/config.toml
+Configuration file on Linux.
+.TP
+.I ~/Library/Application Support/blepo/config.toml
+Configuration file on macOS.
+.TP
+.I ~/.local/share/blepo/watched.json
+Watched-video state on Linux.
+.TP
+.I ~/Library/Application Support/blepo/watched.json
+Watched-video state on macOS.
+.SH DEPENDENCIES
+.TP
+.BR mpv (1)
+Plays selected videos.
+.TP
+.BR yt-dlp (1)
+Resolves channel metadata, retrieves fallback video listings, and resolves
+YouTube streams for mpv.
+.SH EXIT STATUS
+Blepo exits with status 0 after a successful command or normal interactive
+quit. It exits with a non-zero status when configuration, channel resolution,
+storage, or playback setup fails.
+.SH EXAMPLES
+Add a channel by handle:
+.PP
+.nf
+blepo add @Fireship
+.fi
+.PP
+Add a channel by URL:
+.PP
+.nf
+blepo add https://www.youtube.com/@Fireship
+.fi
+.PP
+Fetch videos and start the interactive prompt:
+.PP
+.nf
+blepo
+.fi
+.SH SEE ALSO
+.BR mpv (1),
+.BR yt-dlp (1)

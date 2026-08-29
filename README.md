@@ -28,6 +28,14 @@ Then build and install blepo:
 cargo install --path .
 ```
 
+Cargo installs the executable but not manual pages. On Linux, install the bundled manual into your user man path with:
+
+```bash
+install -Dm644 man/blepo.1 ~/.local/share/man/man1/blepo.1
+```
+
+You can then open it with `man blepo`.
+
 ## Usage
 
 ```bash
@@ -36,6 +44,8 @@ blepo                  # Fetch videos, show list, pick one to play
 ```
 
 Running `blepo` fetches the latest videos from your channels, shows the unwatched ones, and prompts you to pick a number. It launches mpv in the background and returns to the shell immediately. Enter `w3` to mark video 3 as watched without playing. Enter `q` or press Enter to quit.
+
+At the prompt, enter `wa` to mark every currently displayed video as watched. This affects only videos fetched within the configured time window, not the complete history of each channel.
 
 ## Configuration
 
@@ -67,6 +77,20 @@ id = "UCYO_jab_esuFRV4b17AJtAw"
 [[channels]]
 name = "Fireship"
 id = "UCsBjURrPoezykLs9EqgamOA"
+```
+
+## Manual
+
+Read the complete manual directly from the repository:
+
+```bash
+man ./man/blepo.1
+```
+
+After installing it as shown above, open it with:
+
+```bash
+man blepo
 ```
 
 ## How it works
