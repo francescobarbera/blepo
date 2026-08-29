@@ -1,3 +1,4 @@
+pub mod channel_resolver;
 pub mod config;
 pub mod fallback_fetcher;
 pub mod json_store;

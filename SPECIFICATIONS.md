@@ -8,7 +8,7 @@ Blepo is a Rust CLI tool for watching YouTube subscriptions without ads, distrac
 
 Running `blepo` with no arguments:
 
-1. Fetches latest videos from all configured channels (RSS first, yt-dlp fallback on 404)
+1. Fetches latest videos from all configured channels (RSS first, yt-dlp fallback on HTTP errors)
 2. Filters videos to the configured time window (default: 7 days)
 3. Excludes videos tracked in `watched.json`
 4. Filters out YouTube Shorts (via HTTP HEAD check)
@@ -25,7 +25,7 @@ One video per invocation. Run again to pick another.
 ### Fetching behavior
 
 - Tries RSS feed first (`https://www.youtube.com/feeds/videos.xml?channel_id=<id>`)
-- If RSS returns HTTP 404, falls back to yt-dlp (`yt-dlp --flat-playlist --dump-json --extractor-args "youtubetab:approximate_date"`)
+- If RSS returns an HTTP error, falls back to the latest 100 entries from yt-dlp (`yt-dlp --flat-playlist --playlist-end 100 --dump-json --extractor-args "youtubetab:approximate_date"`)
 - Other errors (network, parse, non-404 HTTP) propagate immediately — no fallback
 - Prints "RSS feed returned 404, trying yt-dlp..." to stderr when falling back
 - Continues fetching remaining channels if one fails (logs warning to stderr)
@@ -58,6 +58,16 @@ YouTube Shorts are filtered out before displaying the video list:
 Platform-dependent path resolved by the `directories` crate:
 - **macOS**: `~/Library/Application Support/blepo/config.toml`
 - **Linux**: `~/.config/blepo/config.toml`
+
+Channels are normally added through the CLI using a YouTube handle, channel URL, or canonical ID:
+
+```bash
+blepo add @Fireship
+blepo add https://www.youtube.com/@Fireship
+blepo add UCsBjURrPoezykLs9EqgamOA
+```
+
+Blepo uses `yt-dlp` to resolve the canonical channel name and ID. It creates the configuration file when missing, preserves existing content, and rejects duplicate channel IDs. The file can still be edited manually:
 
 ```toml
 # Optional, defaults to 7

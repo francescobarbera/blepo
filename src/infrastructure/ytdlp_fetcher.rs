@@ -7,6 +7,7 @@ use crate::domain::channel::Channel;
 use crate::domain::video::{Video, VideoId};
 
 const CHANNEL_URL_TEMPLATE: &str = "https://www.youtube.com/channel/";
+const MAX_VIDEOS: &str = "100";
 
 #[derive(Debug, Deserialize)]
 struct YtDlpEntry {
@@ -35,13 +36,7 @@ impl FeedFetcher for YtDlpFetcher {
     fn fetch(&self, channel: &Channel) -> Result<Vec<Video>, FetchError> {
         let url = format!("{CHANNEL_URL_TEMPLATE}{}/videos", channel.id);
         let output = Command::new("yt-dlp")
-            .args([
-                "--flat-playlist",
-                "--dump-json",
-                "--extractor-args",
-                "youtubetab:approximate_date",
-                &url,
-            ])
+            .args(yt_dlp_args(&url))
             .output()
             .map_err(|e| FetchError::Network(format!("failed to run yt-dlp: {e}")))?;
 
@@ -55,6 +50,18 @@ impl FeedFetcher for YtDlpFetcher {
 
         parse_ytdlp_output(&stdout, channel)
     }
+}
+
+fn yt_dlp_args(url: &str) -> [&str; 7] {
+    [
+        "--flat-playlist",
+        "--playlist-end",
+        MAX_VIDEOS,
+        "--dump-json",
+        "--extractor-args",
+        "youtubetab:approximate_date",
+        url,
+    ]
 }
 
 pub fn parse_ytdlp_output(jsonl: &str, channel: &Channel) -> Result<Vec<Video>, FetchError> {
@@ -117,6 +124,24 @@ mod tests {
             name: "Test Channel".to_string(),
             id: ChannelId::parse("UC_x5XG1OV2P6uZZ5FSM9Ttw").unwrap(),
         }
+    }
+
+    #[test]
+    fn limits_fallback_to_latest_hundred_videos() {
+        let url = "https://www.youtube.com/channel/UC123/videos";
+
+        assert_eq!(
+            yt_dlp_args(url),
+            [
+                "--flat-playlist",
+                "--playlist-end",
+                "100",
+                "--dump-json",
+                "--extractor-args",
+                "youtubetab:approximate_date",
+                url,
+            ]
+        );
     }
 
     #[test]

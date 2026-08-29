@@ -16,10 +16,7 @@ impl<P: FeedFetcher, F: FeedFetcher> FallbackFetcher<P, F> {
 impl<P: FeedFetcher, F: FeedFetcher> FeedFetcher for FallbackFetcher<P, F> {
     fn fetch(&self, channel: &Channel) -> Result<Vec<Video>, FetchError> {
         match self.primary.fetch(channel) {
-            Err(FetchError::HttpError(404)) => {
-                eprintln!("RSS feed returned 404, trying yt-dlp...");
-                self.fallback.fetch(channel)
-            }
+            Err(FetchError::HttpError(_)) => self.fallback.fetch(channel),
             other => other,
         }
     }
@@ -81,13 +78,13 @@ mod tests {
     }
 
     #[test]
-    fn does_not_fallback_on_500() {
+    fn falls_back_on_500() {
         let primary = MockFetcher::err(FetchError::HttpError(500));
-        let fallback = MockFetcher::ok(vec![]);
+        let fallback = MockFetcher::err(FetchError::Parse("fallback used".to_string()));
         let fetcher = FallbackFetcher::new(primary, fallback);
 
         let result = fetcher.fetch(&test_channel());
-        assert!(matches!(result, Err(FetchError::HttpError(500))));
+        assert!(matches!(result, Err(FetchError::Parse(message)) if message == "fallback used"));
     }
 
     #[test]

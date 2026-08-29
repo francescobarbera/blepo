@@ -11,7 +11,7 @@ Blepo fetches videos via RSS feeds (with yt-dlp as fallback), filters out what y
 ## Requirements
 
 - [mpv](https://mpv.io/) — video player
-- [yt-dlp](https://github.com/yt-dlp/yt-dlp) — resolves YouTube URLs into video streams (mpv calls it automatically)
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp) — resolves channels and YouTube URLs into video streams
 - [Rust](https://rustup.rs/) — to build from source
 
 ## Install
@@ -31,16 +31,30 @@ cargo install --path .
 ## Usage
 
 ```bash
-blepo    # Fetch videos, show list, pick one to play
+blepo add @Fireship    # Add a channel using its YouTube handle
+blepo                  # Fetch videos, show list, pick one to play
 ```
 
 Running `blepo` fetches the latest videos from your channels, shows the unwatched ones, and prompts you to pick a number. It launches mpv in the background and returns to the shell immediately. Enter `w3` to mark video 3 as watched without playing. Enter `q` or press Enter to quit.
 
 ## Configuration
 
-Create a config file at:
+Add channels using a YouTube handle, channel URL, or channel ID:
+
+```bash
+blepo add @Fireship
+blepo add https://www.youtube.com/@Fireship
+blepo add UCsBjURrPoezykLs9EqgamOA
+```
+
+Blepo resolves the channel name and canonical ID through `yt-dlp`, then creates or updates the configuration file. Existing settings, comments, and channels are preserved.
+
+The configuration file is stored at:
+
 - **macOS**: `~/Library/Application Support/blepo/config.toml`
 - **Linux**: `~/.config/blepo/config.toml`
+
+You can also edit it manually:
 
 ```toml
 # Optional, defaults to 7
@@ -54,8 +68,6 @@ id = "UCYO_jab_esuFRV4b17AJtAw"
 name = "Fireship"
 id = "UCsBjURrPoezykLs9EqgamOA"
 ```
-
-The channel ID is the `UC...` string from the channel's YouTube URL.
 
 ## How it works
 

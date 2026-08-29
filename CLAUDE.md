@@ -96,10 +96,10 @@ Each scenario is self-contained with its own input and expected output.
 ### Product Decisions
 
 - **Playback**: mpv + yt-dlp (ad-free, private, no browser needed)
-- **Video source**: YouTube RSS feeds (no API key, no auth, no tracking)
+- **Video source**: YouTube RSS feeds with yt-dlp fallback on HTTP errors (no API key, no auth, no tracking)
 - **Fetch strategy**: on-demand only, fixed 7-day window
 - **Video list**: flat chronological list, newest first, numbered entries
-- **Channel management**: manual TOML config file
+- **Channel management**: `blepo add <handle-or-url-or-id>` resolves channel metadata through yt-dlp and updates the TOML config; manual editing remains supported
 - **Shorts filtering**: YouTube Shorts detected via HTTP HEAD to `/shorts/<id>` (200 = Short, redirect/error = keep), filtered before display
 - **Watched tracking**: marked as watched on play, no undo
 - **Storage**: Platform-native paths via `directories` crate (macOS: `~/Library/Application Support/blepo/`, Linux: `~/.config/` and `~/.local/share/`). Only `watched.json` is persisted; videos are held in memory per session.
@@ -108,7 +108,8 @@ Each scenario is self-contained with its own input and expected output.
 ### Core Workflow
 
 ```bash
-blepo    # Fetch videos, show list, pick one to play
+blepo add @Fireship    # Resolve and add a YouTube channel
+blepo                  # Fetch videos, show list, pick one to play
 ```
 
 ### Runtime Dependencies
